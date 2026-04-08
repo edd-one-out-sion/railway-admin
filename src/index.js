@@ -4,6 +4,7 @@ const cors = require('cors');
 
 const authRouter = require('./routes/auth');
 const adminRouter = require('./routes/admin');
+const inquiriesRouter = require('./routes/inquiries');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -13,6 +14,7 @@ app.use(express.json());
 
 app.use('/api/auth', authRouter);
 app.use('/api/admin', adminRouter);
+app.use('/api/inquiries', inquiriesRouter);
 
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
