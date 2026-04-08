@@ -52,4 +52,17 @@ router.patch('/:id/status', authMiddleware, async (req, res) => {
   }
 });
 
+// DELETE /api/inquiries/:id — 개별 삭제 (관리자 전용)
+router.delete('/:id', authMiddleware, async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await pool.query('DELETE FROM inquiries WHERE id = $1', [id]);
+    if (result.rowCount === 0) return res.status(404).json({ error: '문의를 찾을 수 없습니다.' });
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: '서버 오류가 발생했습니다.' });
+  }
+});
+
 module.exports = router;
