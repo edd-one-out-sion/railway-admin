@@ -18,6 +18,11 @@ app.use('/api/auth', authRouter);
 app.use('/api/admin', adminRouter);
 app.use('/api/inquiries', inquiriesRouter);
 
+// 서버 시작 시 memo 컬럼 없으면 자동 추가
+pool.query(`ALTER TABLE inquiries ADD COLUMN IF NOT EXISTS memo TEXT`)
+  .then(() => console.log('[db] memo 컬럼 확인 완료'))
+  .catch(err => console.error('[db] memo 컬럼 추가 오류:', err));
+
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
 });

@@ -52,6 +52,19 @@ router.patch('/:id/status', authMiddleware, async (req, res) => {
   }
 });
 
+// PATCH /api/inquiries/:id/memo — 메모 저장 (관리자 전용)
+router.patch('/:id/memo', authMiddleware, async (req, res) => {
+  const { id } = req.params;
+  const { memo } = req.body;
+  try {
+    await pool.query('UPDATE inquiries SET memo = $1 WHERE id = $2', [memo, id]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: '서버 오류가 발생했습니다.' });
+  }
+});
+
 // DELETE /api/inquiries/:id — 개별 삭제 (관리자 전용)
 router.delete('/:id', authMiddleware, async (req, res) => {
   const { id } = req.params;
