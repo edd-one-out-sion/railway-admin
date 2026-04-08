@@ -20,16 +20,6 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
 });
 
-app.get('/debug', async (req, res) => {
-  const pool = require('./db');
-  const url = process.env.PG_URL || process.env.DATABASE_URL || 'NOT SET';
-  try {
-    await pool.query('SELECT 1');
-    res.json({ db: 'connected', url: url.replace(/:([^:@]+)@/, ':***@') });
-  } catch (e) {
-    res.json({ db: 'error', error: e.message, url: url.replace(/:([^:@]+)@/, ':***@') });
-  }
-});
 
 app.listen(PORT, () => {
   console.log(`서버 실행 중: http://localhost:${PORT}`);
