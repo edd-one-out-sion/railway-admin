@@ -7,6 +7,8 @@ const pool = require('./db');
 const authRouter = require('./routes/auth');
 const adminRouter = require('./routes/admin');
 const inquiriesRouter = require('./routes/inquiries');
+const photosRouter = require('./routes/photos');
+const reviewsRouter = require('./routes/reviews');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -17,16 +19,37 @@ app.use(express.json());
 app.use('/api/auth', authRouter);
 app.use('/api/admin', adminRouter);
 app.use('/api/inquiries', inquiriesRouter);
+app.use('/api/photos', photosRouter);
+app.use('/api/reviews', reviewsRouter);
 
-// 서버 시작 시 memo 컬럼 없으면 자동 추가
-pool.query(`ALTER TABLE inquiries ADD COLUMN IF NOT EXISTS memo TEXT`)
-  .then(() => console.log('[db] memo 컬럼 확인 완료'))
-  .catch(err => console.error('[db] memo 컬럼 추가 오류:', err));
+// 서버 시작 시 테이블/컬럼 자동 생성
+async function initDb() {
+  await pool.query(`ALTER TABLE inquiries ADD COLUMN IF NOT EXISTS memo TEXT`);
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS photos (
+      id SERIAL PRIMARY KEY,
+      url TEXT NOT NULL,
+      caption TEXT DEFAULT '',
+      sort_order INT DEFAULT 0,
+      created_at TIMESTAMP DEFAULT NOW()
+    )
+  `);
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS reviews (
+      id SERIAL PRIMARY KEY,
+      author TEXT NOT NULL,
+      source TEXT DEFAULT '네이버 플레이스 리뷰',
+      content TEXT NOT NULL,
+      created_at TIMESTAMP DEFAULT NOW()
+    )
+  `);
+  console.log('[db] 테이블 초기화 완료');
+}
+initDb().catch(err => console.error('[db] 초기화 오류:', err));
 
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
 });
-
 
 // 매일 새벽 3시 — 처리완료 후 1년 경과 문의 자동 삭제
 cron.schedule('0 3 * * *', async () => {
