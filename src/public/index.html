@@ -8,16 +8,14 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; color: #222; min-height: 100vh; }
 
-    /* 로그인 */
-    #login-view {
-      display: flex; align-items: center; justify-content: center; min-height: 100vh;
-    }
+    /* ── 로그인 ── */
+    #login-view { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
     .login-box {
       background: #fff; border-radius: 12px; padding: 40px 32px; width: 100%; max-width: 360px;
-      box-shadow: 0 2px 16px rgba(0,0,0,0.10);
+      box-shadow: 0 2px 16px rgba(0,0,0,.10);
     }
     .login-box h1 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
-    .login-box p { font-size: 13px; color: #888; margin-bottom: 28px; }
+    .login-box p  { font-size: 13px; color: #888; margin-bottom: 28px; }
     .field { margin-bottom: 16px; }
     .field label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
     .field input {
@@ -25,246 +23,323 @@
       font-size: 15px; outline: none; transition: border-color .15s;
     }
     .field input:focus { border-color: #2e7d32; }
-    .btn-login {
+    .btn-primary {
       width: 100%; padding: 12px; background: #2e7d32; color: #fff; border: none;
-      border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 4px;
+      border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer;
     }
-    .btn-login:hover { background: #1b5e20; }
+    .btn-primary:hover { background: #1b5e20; }
     .login-error { color: #c0392b; font-size: 13px; margin-top: 10px; min-height: 18px; }
 
-    /* 대시보드 */
+    /* ── 대시보드 ── */
     #dashboard-view { display: none; }
     .topbar {
       background: #2e7d32; color: #fff; padding: 14px 20px;
-      display: flex; justify-content: space-between; align-items: center;
+      display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10;
     }
     .topbar h1 { font-size: 17px; font-weight: 700; }
     .btn-logout {
-      background: rgba(255,255,255,0.18); border: none; color: #fff;
+      background: rgba(255,255,255,.18); border: none; color: #fff;
       padding: 6px 14px; border-radius: 6px; font-size: 13px; cursor: pointer;
     }
-    .btn-logout:hover { background: rgba(255,255,255,0.3); }
-    .content { padding: 20px 16px; max-width: 900px; margin: 0 auto; }
-    .section-title {
-      font-size: 15px; font-weight: 700; margin-bottom: 14px; color: #333;
+    .btn-logout:hover { background: rgba(255,255,255,.3); }
+
+    /* ── 탭 ── */
+    .tabs { display: flex; background: #fff; border-bottom: 2px solid #e0e0e0; }
+    .tab-btn {
+      flex: 1; padding: 13px 0; font-size: 14px; font-weight: 600; color: #888;
+      background: none; border: none; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px;
     }
+    .tab-btn.active { color: #2e7d32; border-bottom-color: #2e7d32; }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    .content { padding: 20px 16px; max-width: 900px; margin: 0 auto; }
+
+    /* ── 신청자 ── */
     .badge {
       display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px;
       border-radius: 20px; vertical-align: middle;
     }
-    .badge-신규 { background: #e3f2fd; color: #1565c0; }
-    .badge-확인 { background: #fff3e0; color: #e65100; }
-    .badge-처리완료 { background: #e8f5e9; color: #2e7d32; }
+    .badge-신규      { background: #e3f2fd; color: #1565c0; }
+    .badge-확인      { background: #fff3e0; color: #e65100; }
+    .badge-처리완료  { background: #e8f5e9; color: #2e7d32; }
 
-    .card {
-      background: #fff; border-radius: 10px; margin-bottom: 12px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.07); overflow: hidden;
+    .filter-bar { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+    .btn-filter {
+      font-size: 13px; padding: 6px 14px; border-radius: 20px;
+      border: 1.5px solid #ddd; background: #fff; cursor: pointer; font-weight: 600;
     }
-    .card-header {
-      padding: 14px 16px; display: flex; justify-content: space-between; align-items: center;
-      cursor: pointer; user-select: none;
+    .btn-filter.active { border-color: #2e7d32; background: #2e7d32; color: #fff; }
+    .count-badge {
+      display: inline-block; background: rgba(255,255,255,.3); border-radius: 10px;
+      font-size: 11px; padding: 1px 7px; margin-left: 4px;
     }
+    .btn-filter:not(.active) .count-badge { background: #eee; color: #555; }
+
+    .card { background: #fff; border-radius: 10px; margin-bottom: 12px; box-shadow: 0 1px 4px rgba(0,0,0,.07); overflow: hidden; }
+    .card-header { padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
     .card-header:hover { background: #fafafa; }
     .card-header .name { font-weight: 700; font-size: 15px; }
     .card-header .meta { font-size: 13px; color: #888; margin-top: 2px; }
     .card-body { padding: 0 16px 14px; border-top: 1px solid #f0f0f0; display: none; }
     .card-body.open { display: block; }
-    .card-body .detail-row { font-size: 13px; padding: 6px 0; border-bottom: 1px solid #f5f5f5; }
-    .card-body .detail-row:last-child { border-bottom: none; }
-    .card-body .detail-label { color: #888; display: inline-block; width: 80px; }
-    .status-buttons { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+    .detail-row { font-size: 13px; padding: 6px 0; border-bottom: 1px solid #f5f5f5; }
+    .detail-row:last-of-type { border-bottom: none; }
+    .detail-label { color: #888; display: inline-block; width: 80px; }
+    .status-buttons { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; align-items: center; }
     .btn-status {
       font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 6px;
-      border: 1.5px solid #ddd; background: #fff; cursor: pointer; transition: all .15s;
+      border: 1.5px solid #ddd; background: #fff; cursor: pointer;
     }
     .btn-status.active { border-color: #2e7d32; background: #2e7d32; color: #fff; }
-    .btn-status:hover:not(.active) { background: #f5f5f5; }
 
-    .empty { text-align: center; color: #aaa; padding: 60px 20px; font-size: 14px; }
+    /* ── 공통 ── */
+    .empty   { text-align: center; color: #aaa; padding: 60px 20px; font-size: 14px; }
     .loading { text-align: center; color: #888; padding: 40px; font-size: 14px; }
-    .filter-bar { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
-    .btn-filter {
-      font-size: 13px; padding: 6px 14px; border-radius: 20px; border: 1.5px solid #ddd;
-      background: #fff; cursor: pointer; font-weight: 600;
+
+    /* ── 사진 관리 ── */
+    .add-form {
+      background: #fff; border-radius: 10px; padding: 16px; margin-bottom: 20px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.07);
     }
-    .btn-filter.active { border-color: #2e7d32; background: #2e7d32; color: #fff; }
-    .count-badge {
-      display: inline-block; background: #eee; border-radius: 10px;
-      font-size: 11px; padding: 1px 7px; margin-left: 6px; color: #555;
+    .add-form h3 { font-size: 14px; font-weight: 700; margin-bottom: 12px; color: #333; }
+    .input-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .input-row input, .input-row textarea {
+      flex: 1; min-width: 0; padding: 9px 12px; border: 1.5px solid #ddd; border-radius: 8px;
+      font-size: 14px; outline: none; font-family: inherit;
     }
+    .input-row input:focus, .input-row textarea:focus { border-color: #2e7d32; }
+    .btn-add {
+      padding: 9px 18px; background: #2e7d32; color: #fff; border: none;
+      border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; white-space: nowrap;
+    }
+    .btn-add:hover { background: #1b5e20; }
+
+    .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+    .photo-item { background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.07); }
+    .photo-item img { width: 100%; height: 120px; object-fit: cover; display: block; background: #f0f0f0; }
+    .photo-item .photo-caption { font-size: 12px; color: #555; padding: 6px 10px; }
+    .photo-item .btn-delete {
+      width: 100%; padding: 6px; background: none; border: none; border-top: 1px solid #f0f0f0;
+      color: #c0392b; font-size: 12px; cursor: pointer; font-weight: 600;
+    }
+    .photo-item .btn-delete:hover { background: #fdecea; }
+
+    /* ── 후기 관리 ── */
+    .review-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .review-form-grid textarea { grid-column: 1 / -1; resize: vertical; min-height: 72px; }
+    .review-item {
+      background: #fff; border-radius: 10px; padding: 14px 16px; margin-bottom: 10px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.07); display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;
+    }
+    .review-item .review-body { flex: 1; }
+    .review-item .review-author { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
+    .review-item .review-source { font-size: 11px; color: #aaa; margin-bottom: 6px; }
+    .review-item .review-content { font-size: 13px; color: #444; line-height: 1.5; }
+    .btn-icon-delete {
+      background: none; border: none; color: #ccc; font-size: 18px; cursor: pointer; flex-shrink: 0; line-height: 1;
+    }
+    .btn-icon-delete:hover { color: #c0392b; }
+
+    .section-title { font-size: 15px; font-weight: 700; margin-bottom: 14px; color: #333; }
   </style>
 </head>
 <body>
 
-<!-- 로그인 뷰 -->
+<!-- 로그인 -->
 <div id="login-view">
   <div class="login-box">
     <h1>구찌골프 관리자</h1>
     <p>운영진 전용 페이지입니다</p>
     <form id="login-form">
       <div class="field">
-        <label for="username">아이디</label>
+        <label>아이디</label>
         <input type="text" id="username" placeholder="admin" autocomplete="username" required>
       </div>
       <div class="field">
-        <label for="password">비밀번호</label>
+        <label>비밀번호</label>
         <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" required>
       </div>
-      <button type="submit" class="btn-login">로그인</button>
+      <button type="submit" class="btn-primary">로그인</button>
       <div class="login-error" id="login-error"></div>
     </form>
   </div>
 </div>
 
-<!-- 대시보드 뷰 -->
+<!-- 대시보드 -->
 <div id="dashboard-view">
   <div class="topbar">
     <h1>구찌골프 관리자</h1>
     <button class="btn-logout" id="btn-logout">로그아웃</button>
   </div>
-  <div class="content">
-    <div class="section-title">신청자 목록</div>
-    <div class="filter-bar">
-      <button class="btn-filter active" data-filter="전체">전체 <span class="count-badge" id="count-전체">0</span></button>
-      <button class="btn-filter" data-filter="신규">신규 <span class="count-badge" id="count-신규">0</span></button>
-      <button class="btn-filter" data-filter="확인">확인 <span class="count-badge" id="count-확인">0</span></button>
-      <button class="btn-filter" data-filter="처리완료">처리완료 <span class="count-badge" id="count-처리완료">0</span></button>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="inquiries">신청자</button>
+    <button class="tab-btn" data-tab="photos">현장사진</button>
+    <button class="tab-btn" data-tab="reviews">수강생 후기</button>
+  </div>
+
+  <!-- 탭: 신청자 -->
+  <div class="tab-panel active" id="tab-inquiries">
+    <div class="content">
+      <div class="filter-bar">
+        <button class="btn-filter active" data-filter="전체">전체<span class="count-badge" id="count-전체">0</span></button>
+        <button class="btn-filter" data-filter="신규">신규<span class="count-badge" id="count-신규">0</span></button>
+        <button class="btn-filter" data-filter="확인">확인<span class="count-badge" id="count-확인">0</span></button>
+        <button class="btn-filter" data-filter="처리완료">처리완료<span class="count-badge" id="count-처리완료">0</span></button>
+      </div>
+      <div id="inquiry-list"><div class="loading">불러오는 중...</div></div>
     </div>
-    <div id="inquiry-list">
-      <div class="loading">불러오는 중...</div>
+  </div>
+
+  <!-- 탭: 현장사진 -->
+  <div class="tab-panel" id="tab-photos">
+    <div class="content">
+      <div class="add-form">
+        <h3>사진 추가</h3>
+        <div class="input-row">
+          <input type="url" id="photo-url" placeholder="이미지 URL (https://...)" required>
+          <input type="text" id="photo-caption" placeholder="설명 (선택)">
+          <button class="btn-add" onclick="addPhoto()">추가</button>
+        </div>
+      </div>
+      <div class="section-title">등록된 사진</div>
+      <div id="photo-list"><div class="loading">불러오는 중...</div></div>
+    </div>
+  </div>
+
+  <!-- 탭: 수강생 후기 -->
+  <div class="tab-panel" id="tab-reviews">
+    <div class="content">
+      <div class="add-form">
+        <h3>후기 추가</h3>
+        <div class="input-row review-form-grid">
+          <input type="text" id="review-author" placeholder="이름 (예: 김○○ 회원)" required>
+          <input type="text" id="review-source" placeholder="출처 (기본: 네이버 플레이스 리뷰)">
+          <textarea id="review-content" placeholder="후기 내용" required></textarea>
+          <button class="btn-add" style="grid-column:1/-1" onclick="addReview()">추가</button>
+        </div>
+      </div>
+      <div class="section-title">등록된 후기</div>
+      <div id="review-list"><div class="loading">불러오는 중...</div></div>
     </div>
   </div>
 </div>
 
 <script>
-  const API = '';  // same origin
+  const API = '';
   let token = localStorage.getItem('admin_token');
   let allInquiries = [];
   let currentFilter = '전체';
 
   // 초기화
-  if (token) {
-    showDashboard();
-  } else {
-    showLogin();
-  }
+  token ? showDashboard() : showLogin();
 
-  // 로그인 폼
+  // ── 로그인 ──
   document.getElementById('login-form').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const username = document.getElementById('username').value.trim();
-    const password = document.getElementById('password').value;
     const errorEl = document.getElementById('login-error');
     errorEl.textContent = '';
-
     try {
       const res = await fetch(`${API}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
+        body: JSON.stringify({
+          username: document.getElementById('username').value.trim(),
+          password: document.getElementById('password').value,
+        })
       });
       const data = await res.json();
-      if (!res.ok) {
-        errorEl.textContent = data.error || '로그인 실패';
-        return;
-      }
+      if (!res.ok) { errorEl.textContent = data.error || '로그인 실패'; return; }
       token = data.token;
       localStorage.setItem('admin_token', token);
       showDashboard();
-    } catch {
-      errorEl.textContent = '서버에 연결할 수 없습니다.';
-    }
+    } catch { errorEl.textContent = '서버에 연결할 수 없습니다.'; }
   });
 
-  // 로그아웃
   document.getElementById('btn-logout').addEventListener('click', () => {
     localStorage.removeItem('admin_token');
     token = null;
     showLogin();
   });
 
-  // 필터 버튼
+  // ── 탭 전환 ──
+  document.querySelector('.tabs').addEventListener('click', (e) => {
+    const btn = e.target.closest('.tab-btn');
+    if (!btn) return;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(`tab-${btn.dataset.tab}`).classList.add('active');
+  });
+
+  // ── 필터 ──
   document.querySelector('.filter-bar').addEventListener('click', (e) => {
     const btn = e.target.closest('.btn-filter');
     if (!btn) return;
     document.querySelectorAll('.btn-filter').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     currentFilter = btn.dataset.filter;
-    renderList();
+    renderInquiries();
   });
 
   function showLogin() {
     document.getElementById('login-view').style.display = 'flex';
     document.getElementById('dashboard-view').style.display = 'none';
-    document.getElementById('login-error').textContent = '';
   }
-
   function showDashboard() {
     document.getElementById('login-view').style.display = 'none';
     document.getElementById('dashboard-view').style.display = 'block';
     loadInquiries();
+    loadPhotos();
+    loadReviews();
   }
 
+  // ─────────────────────────────────────────
+  // 신청자
+  // ─────────────────────────────────────────
   async function loadInquiries() {
-    const listEl = document.getElementById('inquiry-list');
-    listEl.innerHTML = '<div class="loading">불러오는 중...</div>';
+    document.getElementById('inquiry-list').innerHTML = '<div class="loading">불러오는 중...</div>';
     try {
-      const res = await fetch(`${API}/api/inquiries`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      if (res.status === 401) {
-        localStorage.removeItem('admin_token');
-        token = null;
-        showLogin();
-        return;
-      }
+      const res = await authFetch('/api/inquiries');
+      if (!res) return;
       allInquiries = await res.json();
       updateCounts();
-      renderList();
-    } catch {
-      listEl.innerHTML = '<div class="empty">서버에 연결할 수 없습니다.</div>';
-    }
+      renderInquiries();
+    } catch { document.getElementById('inquiry-list').innerHTML = '<div class="empty">서버 오류</div>'; }
   }
 
   function updateCounts() {
     const statuses = ['신규', '확인', '처리완료'];
     document.getElementById('count-전체').textContent = allInquiries.length;
     statuses.forEach(s => {
-      document.getElementById(`count-${s}`).textContent =
-        allInquiries.filter(i => i.status === s).length;
+      document.getElementById(`count-${s}`).textContent = allInquiries.filter(i => i.status === s).length;
     });
   }
 
-  function renderList() {
+  function renderInquiries() {
     const listEl = document.getElementById('inquiry-list');
-    const filtered = currentFilter === '전체'
-      ? allInquiries
-      : allInquiries.filter(i => i.status === currentFilter);
-
-    if (filtered.length === 0) {
-      listEl.innerHTML = '<div class="empty">신청자가 없습니다.</div>';
-      return;
-    }
-
+    const filtered = currentFilter === '전체' ? allInquiries : allInquiries.filter(i => i.status === currentFilter);
+    if (!filtered.length) { listEl.innerHTML = '<div class="empty">신청자가 없습니다.</div>'; return; }
     listEl.innerHTML = filtered.map(inq => `
       <div class="card" id="card-${inq.id}">
         <div class="card-header" onclick="toggleCard(${inq.id})">
           <div>
             <div class="name">${esc(inq.name)} <span class="badge badge-${inq.status}">${inq.status}</span></div>
-            <div class="meta">${esc(inq.phone)} · ${formatDate(inq.created_at)}</div>
+            <div class="meta">${esc(inq.phone)} · ${fmtDate(inq.created_at)}</div>
           </div>
-          <span style="color:#bbb; font-size:18px;">›</span>
+          <span style="color:#bbb;font-size:18px">›</span>
         </div>
         <div class="card-body" id="body-${inq.id}">
-          <div class="detail-row"><span class="detail-label">레슨 유형</span>${esc(inq.lesson_type || '—')}</div>
-          <div class="detail-row"><span class="detail-label">메시지</span>${esc(inq.message || '—')}</div>
-          <div class="detail-row"><span class="detail-label">유입 경로</span>${esc(inq.referrer || '—')}</div>
-          <div class="detail-row"><span class="detail-label">UTM</span>${esc(inq.utm_source || '—')}</div>
+          <div class="detail-row"><span class="detail-label">레슨 유형</span>${esc(inq.lesson_type||'—')}</div>
+          <div class="detail-row"><span class="detail-label">메시지</span>${esc(inq.message||'—')}</div>
+          <div class="detail-row"><span class="detail-label">유입 경로</span>${esc(inq.referrer||'—')}</div>
+          <div class="detail-row"><span class="detail-label">UTM</span>${esc(inq.utm_source||'—')}</div>
           <div class="status-buttons">
-            <span style="font-size:12px; color:#888; align-self:center;">상태 변경:</span>
+            <span style="font-size:12px;color:#888">상태:</span>
             ${['신규','확인','처리완료'].map(s => `
-              <button class="btn-status ${inq.status === s ? 'active' : ''}"
-                onclick="changeStatus(${inq.id}, '${s}')">${s}</button>
+              <button class="btn-status ${inq.status===s?'active':''}" onclick="changeStatus(${inq.id},'${s}')">${s}</button>
             `).join('')}
           </div>
         </div>
@@ -272,46 +347,138 @@
     `).join('');
   }
 
-  function toggleCard(id) {
-    const body = document.getElementById(`body-${id}`);
-    body.classList.toggle('open');
-  }
+  function toggleCard(id) { document.getElementById(`body-${id}`).classList.toggle('open'); }
 
   async function changeStatus(id, status) {
-    try {
-      const res = await fetch(`${API}/api/inquiries/${id}/status`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ status })
-      });
-      if (res.ok) {
-        const inq = allInquiries.find(i => i.id === id);
-        if (inq) inq.status = status;
-        updateCounts();
-        renderList();
-        // 변경된 카드 다시 열기
-        setTimeout(() => {
-          const body = document.getElementById(`body-${id}`);
-          if (body) body.classList.add('open');
-        }, 0);
-      }
-    } catch {
-      alert('상태 변경에 실패했습니다.');
+    const res = await authFetch(`/api/inquiries/${id}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status })
+    });
+    if (res && res.ok) {
+      const inq = allInquiries.find(i => i.id === id);
+      if (inq) inq.status = status;
+      updateCounts();
+      renderInquiries();
+      setTimeout(() => { const b = document.getElementById(`body-${id}`); if (b) b.classList.add('open'); }, 0);
     }
   }
 
-  function formatDate(dateStr) {
-    if (!dateStr) return '—';
-    const d = new Date(dateStr);
-    return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+  // ─────────────────────────────────────────
+  // 현장사진
+  // ─────────────────────────────────────────
+  async function loadPhotos() {
+    document.getElementById('photo-list').innerHTML = '<div class="loading">불러오는 중...</div>';
+    try {
+      const res = await fetch(`${API}/api/photos`);
+      const photos = await res.json();
+      renderPhotos(photos);
+    } catch { document.getElementById('photo-list').innerHTML = '<div class="empty">서버 오류</div>'; }
   }
 
-  function esc(str) {
-    if (!str) return '';
-    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  function renderPhotos(photos) {
+    const el = document.getElementById('photo-list');
+    if (!photos.length) { el.innerHTML = '<div class="empty">등록된 사진이 없습니다.</div>'; return; }
+    el.innerHTML = `<div class="photo-grid">${photos.map(p => `
+      <div class="photo-item">
+        <img src="${esc(p.url)}" alt="${esc(p.caption)}" onerror="this.style.height='80px';this.alt='이미지 없음'">
+        <div class="photo-caption">${esc(p.caption)||'&nbsp;'}</div>
+        <button class="btn-delete" onclick="deletePhoto(${p.id})">삭제</button>
+      </div>
+    `).join('')}</div>`;
+  }
+
+  async function addPhoto() {
+    const url = document.getElementById('photo-url').value.trim();
+    const caption = document.getElementById('photo-caption').value.trim();
+    if (!url) { alert('URL을 입력해주세요.'); return; }
+    const res = await authFetch('/api/photos', { method: 'POST', body: JSON.stringify({ url, caption }) });
+    if (res && res.ok) {
+      document.getElementById('photo-url').value = '';
+      document.getElementById('photo-caption').value = '';
+      loadPhotos();
+    } else if (res) {
+      const d = await res.json(); alert(d.error || '추가 실패');
+    }
+  }
+
+  async function deletePhoto(id) {
+    if (!confirm('사진을 삭제할까요?')) return;
+    const res = await authFetch(`/api/photos/${id}`, { method: 'DELETE' });
+    if (res && res.ok) loadPhotos();
+  }
+
+  // ─────────────────────────────────────────
+  // 수강생 후기
+  // ─────────────────────────────────────────
+  async function loadReviews() {
+    document.getElementById('review-list').innerHTML = '<div class="loading">불러오는 중...</div>';
+    try {
+      const res = await fetch(`${API}/api/reviews`);
+      const reviews = await res.json();
+      renderReviews(reviews);
+    } catch { document.getElementById('review-list').innerHTML = '<div class="empty">서버 오류</div>'; }
+  }
+
+  function renderReviews(reviews) {
+    const el = document.getElementById('review-list');
+    if (!reviews.length) { el.innerHTML = '<div class="empty">등록된 후기가 없습니다.</div>'; return; }
+    el.innerHTML = reviews.map(r => `
+      <div class="review-item">
+        <div class="review-body">
+          <div class="review-author">${esc(r.author)}</div>
+          <div class="review-source">${esc(r.source)}</div>
+          <div class="review-content">${esc(r.content)}</div>
+        </div>
+        <button class="btn-icon-delete" onclick="deleteReview(${r.id})" title="삭제">×</button>
+      </div>
+    `).join('');
+  }
+
+  async function addReview() {
+    const author  = document.getElementById('review-author').value.trim();
+    const source  = document.getElementById('review-source').value.trim();
+    const content = document.getElementById('review-content').value.trim();
+    if (!author || !content) { alert('이름과 후기 내용을 입력해주세요.'); return; }
+    const res = await authFetch('/api/reviews', {
+      method: 'POST',
+      body: JSON.stringify({ author, source: source || '네이버 플레이스 리뷰', content })
+    });
+    if (res && res.ok) {
+      document.getElementById('review-author').value = '';
+      document.getElementById('review-source').value = '';
+      document.getElementById('review-content').value = '';
+      loadReviews();
+    } else if (res) {
+      const d = await res.json(); alert(d.error || '추가 실패');
+    }
+  }
+
+  async function deleteReview(id) {
+    if (!confirm('후기를 삭제할까요?')) return;
+    const res = await authFetch(`/api/reviews/${id}`, { method: 'DELETE' });
+    if (res && res.ok) loadReviews();
+  }
+
+  // ─────────────────────────────────────────
+  // 공통 유틸
+  // ─────────────────────────────────────────
+  async function authFetch(path, opts = {}) {
+    const res = await fetch(`${API}${path}`, {
+      ...opts,
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`, ...(opts.headers || {}) }
+    });
+    if (res.status === 401) { localStorage.removeItem('admin_token'); token = null; showLogin(); return null; }
+    return res;
+  }
+
+  function fmtDate(s) {
+    if (!s) return '—';
+    const d = new Date(s);
+    return `${d.getFullYear()}.${pad(d.getMonth()+1)}.${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+  function pad(n) { return String(n).padStart(2,'0'); }
+  function esc(s) {
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 </script>
 </body>
