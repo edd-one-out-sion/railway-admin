@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>구찌골프 관리자</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; color: #222; min-height: 100vh; }
+
+    /* 로그인 */
+    #login-view {
+      display: flex; align-items: center; justify-content: center; min-height: 100vh;
+    }
+    .login-box {
+      background: #fff; border-radius: 12px; padding: 40px 32px; width: 100%; max-width: 360px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.10);
+    }
+    .login-box h1 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+    .login-box p { font-size: 13px; color: #888; margin-bottom: 28px; }
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+    .field input {
+      width: 100%; padding: 10px 12px; border: 1.5px solid #ddd; border-radius: 8px;
+      font-size: 15px; outline: none; transition: border-color .15s;
+    }
+    .field input:focus { border-color: #2e7d32; }
+    .btn-login {
+      width: 100%; padding: 12px; background: #2e7d32; color: #fff; border: none;
+      border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 4px;
+    }
+    .btn-login:hover { background: #1b5e20; }
+    .login-error { color: #c0392b; font-size: 13px; margin-top: 10px; min-height: 18px; }
+
+    /* 대시보드 */
+    #dashboard-view { display: none; }
+    .topbar {
+      background: #2e7d32; color: #fff; padding: 14px 20px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .topbar h1 { font-size: 17px; font-weight: 700; }
+    .btn-logout {
+      background: rgba(255,255,255,0.18); border: none; color: #fff;
+      padding: 6px 14px; border-radius: 6px; font-size: 13px; cursor: pointer;
+    }
+    .btn-logout:hover { background: rgba(255,255,255,0.3); }
+    .content { padding: 20px 16px; max-width: 900px; margin: 0 auto; }
+    .section-title {
+      font-size: 15px; font-weight: 700; margin-bottom: 14px; color: #333;
+    }
+    .badge {
+      display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px;
+      border-radius: 20px; vertical-align: middle;
+    }
+    .badge-신규 { background: #e3f2fd; color: #1565c0; }
+    .badge-확인 { background: #fff3e0; color: #e65100; }
+    .badge-처리완료 { background: #e8f5e9; color: #2e7d32; }
+
+    .card {
+      background: #fff; border-radius: 10px; margin-bottom: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07); overflow: hidden;
+    }
+    .card-header {
+      padding: 14px 16px; display: flex; justify-content: space-between; align-items: center;
+      cursor: pointer; user-select: none;
+    }
+    .card-header:hover { background: #fafafa; }
+    .card-header .name { font-weight: 700; font-size: 15px; }
+    .card-header .meta { font-size: 13px; color: #888; margin-top: 2px; }
+    .card-body { padding: 0 16px 14px; border-top: 1px solid #f0f0f0; display: none; }
+    .card-body.open { display: block; }
+    .card-body .detail-row { font-size: 13px; padding: 6px 0; border-bottom: 1px solid #f5f5f5; }
+    .card-body .detail-row:last-child { border-bottom: none; }
+    .card-body .detail-label { color: #888; display: inline-block; width: 80px; }
+    .status-buttons { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+    .btn-status {
+      font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 6px;
+      border: 1.5px solid #ddd; background: #fff; cursor: pointer; transition: all .15s;
+    }
+    .btn-status.active { border-color: #2e7d32; background: #2e7d32; color: #fff; }
+    .btn-status:hover:not(.active) { background: #f5f5f5; }
+
+    .empty { text-align: center; color: #aaa; padding: 60px 20px; font-size: 14px; }
+    .loading { text-align: center; color: #888; padding: 40px; font-size: 14px; }
+    .filter-bar { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+    .btn-filter {
+      font-size: 13px; padding: 6px 14px; border-radius: 20px; border: 1.5px solid #ddd;
+      background: #fff; cursor: pointer; font-weight: 600;
+    }
+    .btn-filter.active { border-color: #2e7d32; background: #2e7d32; color: #fff; }
+    .count-badge {
+      display: inline-block; background: #eee; border-radius: 10px;
+      font-size: 11px; padding: 1px 7px; margin-left: 6px; color: #555;
+    }
+  </style>
+</head>
+<body>
+
+<!-- 로그인 뷰 -->
+<div id="login-view">
+  <div class="login-box">
+    <h1>구찌골프 관리자</h1>
+    <p>운영진 전용 페이지입니다</p>
+    <form id="login-form">
+      <div class="field">
+        <label for="username">아이디</label>
+        <input type="text" id="username" placeholder="admin" autocomplete="username" required>
+      </div>
+      <div class="field">
+        <label for="password">비밀번호</label>
+        <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" required>
+      </div>
+      <button type="submit" class="btn-login">로그인</button>
+      <div class="login-error" id="login-error"></div>
+    </form>
+  </div>
+</div>
+
+<!-- 대시보드 뷰 -->
+<div id="dashboard-view">
+  <div class="topbar">
+    <h1>구찌골프 관리자</h1>
+    <button class="btn-logout" id="btn-logout">로그아웃</button>
+  </div>
+  <div class="content">
+    <div class="section-title">신청자 목록</div>
+    <div class="filter-bar">
+      <button class="btn-filter active" data-filter="전체">전체 <span class="count-badge" id="count-전체">0</span></button>
+      <button class="btn-filter" data-filter="신규">신규 <span class="count-badge" id="count-신규">0</span></button>
+      <button class="btn-filter" data-filter="확인">확인 <span class="count-badge" id="count-확인">0</span></button>
+      <button class="btn-filter" data-filter="처리완료">처리완료 <span class="count-badge" id="count-처리완료">0</span></button>
+    </div>
+    <div id="inquiry-list">
+      <div class="loading">불러오는 중...</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const API = '';  // same origin
+  let token = localStorage.getItem('admin_token');
+  let allInquiries = [];
+  let currentFilter = '전체';
+
+  // 초기화
+  if (token) {
+    showDashboard();
+  } else {
+    showLogin();
+  }
+
+  // 로그인 폼
+  document.getElementById('login-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
+    const errorEl = document.getElementById('login-error');
+    errorEl.textContent = '';
+
+    try {
+      const res = await fetch(`${API}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        errorEl.textContent = data.error || '로그인 실패';
+        return;
+      }
+      token = data.token;
+      localStorage.setItem('admin_token', token);
+      showDashboard();
+    } catch {
+      errorEl.textContent = '서버에 연결할 수 없습니다.';
+    }
+  });
+
+  // 로그아웃
+  document.getElementById('btn-logout').addEventListener('click', () => {
+    localStorage.removeItem('admin_token');
+    token = null;
+    showLogin();
+  });
+
+  // 필터 버튼
+  document.querySelector('.filter-bar').addEventListener('click', (e) => {
+    const btn = e.target.closest('.btn-filter');
+    if (!btn) return;
+    document.querySelectorAll('.btn-filter').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = btn.dataset.filter;
+    renderList();
+  });
+
+  function showLogin() {
+    document.getElementById('login-view').style.display = 'flex';
+    document.getElementById('dashboard-view').style.display = 'none';
+    document.getElementById('login-error').textContent = '';
+  }
+
+  function showDashboard() {
+    document.getElementById('login-view').style.display = 'none';
+    document.getElementById('dashboard-view').style.display = 'block';
+    loadInquiries();
+  }
+
+  async function loadInquiries() {
+    const listEl = document.getElementById('inquiry-list');
+    listEl.innerHTML = '<div class="loading">불러오는 중...</div>';
+    try {
+      const res = await fetch(`${API}/api/inquiries`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.status === 401) {
+        localStorage.removeItem('admin_token');
+        token = null;
+        showLogin();
+        return;
+      }
+      allInquiries = await res.json();
+      updateCounts();
+      renderList();
+    } catch {
+      listEl.innerHTML = '<div class="empty">서버에 연결할 수 없습니다.</div>';
+    }
+  }
+
+  function updateCounts() {
+    const statuses = ['신규', '확인', '처리완료'];
+    document.getElementById('count-전체').textContent = allInquiries.length;
+    statuses.forEach(s => {
+      document.getElementById(`count-${s}`).textContent =
+        allInquiries.filter(i => i.status === s).length;
+    });
+  }
+
+  function renderList() {
+    const listEl = document.getElementById('inquiry-list');
+    const filtered = currentFilter === '전체'
+      ? allInquiries
+      : allInquiries.filter(i => i.status === currentFilter);
+
+    if (filtered.length === 0) {
+      listEl.innerHTML = '<div class="empty">신청자가 없습니다.</div>';
+      return;
+    }
+
+    listEl.innerHTML = filtered.map(inq => `
+      <div class="card" id="card-${inq.id}">
+        <div class="card-header" onclick="toggleCard(${inq.id})">
+          <div>
+            <div class="name">${esc(inq.name)} <span class="badge badge-${inq.status}">${inq.status}</span></div>
+            <div class="meta">${esc(inq.phone)} · ${formatDate(inq.created_at)}</div>
+          </div>
+          <span style="color:#bbb; font-size:18px;">›</span>
+        </div>
+        <div class="card-body" id="body-${inq.id}">
+          <div class="detail-row"><span class="detail-label">레슨 유형</span>${esc(inq.lesson_type || '—')}</div>
+          <div class="detail-row"><span class="detail-label">메시지</span>${esc(inq.message || '—')}</div>
+          <div class="detail-row"><span class="detail-label">유입 경로</span>${esc(inq.referrer || '—')}</div>
+          <div class="detail-row"><span class="detail-label">UTM</span>${esc(inq.utm_source || '—')}</div>
+          <div class="status-buttons">
+            <span style="font-size:12px; color:#888; align-self:center;">상태 변경:</span>
+            ${['신규','확인','처리완료'].map(s => `
+              <button class="btn-status ${inq.status === s ? 'active' : ''}"
+                onclick="changeStatus(${inq.id}, '${s}')">${s}</button>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function toggleCard(id) {
+    const body = document.getElementById(`body-${id}`);
+    body.classList.toggle('open');
+  }
+
+  async function changeStatus(id, status) {
+    try {
+      const res = await fetch(`${API}/api/inquiries/${id}/status`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ status })
+      });
+      if (res.ok) {
+        const inq = allInquiries.find(i => i.id === id);
+        if (inq) inq.status = status;
+        updateCounts();
+        renderList();
+        // 변경된 카드 다시 열기
+        setTimeout(() => {
+          const body = document.getElementById(`body-${id}`);
+          if (body) body.classList.add('open');
+        }, 0);
+      }
+    } catch {
+      alert('상태 변경에 실패했습니다.');
+    }
+  }
+
+  function formatDate(dateStr) {
+    if (!dateStr) return '—';
+    const d = new Date(dateStr);
+    return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+  }
+
+  function esc(str) {
+    if (!str) return '';
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+</script>
+</body>
+</html>
