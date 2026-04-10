@@ -38,7 +38,7 @@ router.patch('/:id/status', authMiddleware, async (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
 
-  const allowed = ['신규', '확인', '처리완료'];
+  const allowed = ['새문의', '확인함', '예약완료', '진행완료', '등록성공', '보류', '신규', '확인', '처리완료'];
   if (!allowed.includes(status)) {
     return res.status(400).json({ error: '유효하지 않은 상태값입니다.' });
   }
